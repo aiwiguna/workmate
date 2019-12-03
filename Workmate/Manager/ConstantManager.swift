@@ -12,4 +12,6 @@ class ConstantManager{
     static let baseUrl = "https://api.helpster.tech/v1"
     static let username = "+6281313272005"
     static let password = "alexander"
+    
+    static let temporaryKey = "KzYyODEzMTMyNzIwMDU6YWxleGFuZGVy"
 }

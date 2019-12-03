@@ -7,8 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5664895A23964E6E002DA9F2 /* Clocked.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5664895923964E6E002DA9F2 /* Clocked.swift */; };
+		5664895A23964E6E002DA9F2 /* ClockedOut.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5664895923964E6E002DA9F2 /* ClockedOut.swift */; };
 		5664895C23964E78002DA9F2 /* Timesheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5664895B23964E78002DA9F2 /* Timesheet.swift */; };
+		5664895E23965DC7002DA9F2 /* ClockedIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5664895D23965DC7002DA9F2 /* ClockedIn.swift */; };
+		5664896023965FCF002DA9F2 /* ClockedError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5664895F23965FCF002DA9F2 /* ClockedError.swift */; };
 		56659CB42395FA1D00963AD5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56659CB32395FA1D00963AD5 /* AppDelegate.swift */; };
 		56659CBD2395FA2000963AD5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 56659CBC2395FA2000963AD5 /* Assets.xcassets */; };
 		56659CC02395FA2000963AD5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 56659CBE2395FA2000963AD5 /* LaunchScreen.storyboard */; };
@@ -56,8 +58,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		5664895923964E6E002DA9F2 /* Clocked.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clocked.swift; sourceTree = "<group>"; };
+		5664895923964E6E002DA9F2 /* ClockedOut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClockedOut.swift; sourceTree = "<group>"; };
 		5664895B23964E78002DA9F2 /* Timesheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Timesheet.swift; sourceTree = "<group>"; };
+		5664895D23965DC7002DA9F2 /* ClockedIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClockedIn.swift; sourceTree = "<group>"; };
+		5664895F23965FCF002DA9F2 /* ClockedError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClockedError.swift; sourceTree = "<group>"; };
 		56659CB02395FA1D00963AD5 /* Workmate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Workmate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		56659CB32395FA1D00963AD5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		56659CBC2395FA2000963AD5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -187,8 +191,10 @@
 				56659CFD23960CC000963AD5 /* Address.swift */,
 				56659CFB23960CB500963AD5 /* Location.swift */,
 				56659CF923960CA000963AD5 /* Client.swift */,
-				5664895923964E6E002DA9F2 /* Clocked.swift */,
+				5664895923964E6E002DA9F2 /* ClockedOut.swift */,
 				5664895B23964E78002DA9F2 /* Timesheet.swift */,
+				5664895D23965DC7002DA9F2 /* ClockedIn.swift */,
+				5664895F23965FCF002DA9F2 /* ClockedError.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -361,6 +367,7 @@
 				56659CEC239607B200963AD5 /* Key.swift in Sources */,
 				56659D0623960CEF00963AD5 /* Manager.swift in Sources */,
 				56659CEA2396068E00963AD5 /* ConnectionManager.swift in Sources */,
+				5664895E23965DC7002DA9F2 /* ClockedIn.swift in Sources */,
 				56659CE52395FABD00963AD5 /* MainViewController.swift in Sources */,
 				56659CF4239608FF00963AD5 /* Util.swift in Sources */,
 				56659D0A23960D1200963AD5 /* Position.swift in Sources */,
@@ -368,12 +375,13 @@
 				56659D0223960CD500963AD5 /* City.swift in Sources */,
 				56659CFE23960CC000963AD5 /* Address.swift in Sources */,
 				56659CEF239607EA00963AD5 /* ErrorKey.swift in Sources */,
+				5664896023965FCF002DA9F2 /* ClockedError.swift in Sources */,
 				56659CB42395FA1D00963AD5 /* AppDelegate.swift in Sources */,
 				56659CF623960A5100963AD5 /* Extension.swift in Sources */,
 				56659CFA23960CA000963AD5 /* Client.swift in Sources */,
 				56659CF823960C8C00963AD5 /* StaffRequest.swift in Sources */,
 				5664895C23964E78002DA9F2 /* Timesheet.swift in Sources */,
-				5664895A23964E6E002DA9F2 /* Clocked.swift in Sources */,
+				5664895A23964E6E002DA9F2 /* ClockedOut.swift in Sources */,
 				56659D0C23960D1D00963AD5 /* Schedule.swift in Sources */,
 				56659D0423960CDF00963AD5 /* Country.swift in Sources */,
 				56659D0E23961BC700963AD5 /* Enum.swift in Sources */,

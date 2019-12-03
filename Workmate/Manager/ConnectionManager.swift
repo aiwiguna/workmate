@@ -36,12 +36,11 @@ class ConnectionManager{
     }
     
     static func getStaffRequest(completion: @escaping (StaffRequest?, Error?)-> Void){
-        guard let key = Util.shared.getAuthKey() else { return }
         let session = URLSession(configuration: .default)
         let components = URLComponents(string: "\(ConstantManager.baseUrl)/staff-requests/26074/")!
         var request = URLRequest(url: components.url!)
         request.httpMethod = "GET"
-        request.addValue("Authorization", forHTTPHeaderField: key)
+
         let task = session.dataTask(with: request) { (data, response, err) in
             if let error = err{
                 completion(nil, error)
@@ -57,7 +56,7 @@ class ConnectionManager{
         task.resume()
     }
     
-    static func clockIn(lat:String, lng:String, completion: @escaping (Clocked?, Error?)-> Void){
+    static func clockIn(lat:String, lng:String, completion: @escaping (ClockedIn?,ClockedError?, Error?)-> Void){
         guard let key = Util.shared.getAuthKey() else { return }
         let session = URLSession(configuration: .default)
         let json:[String:Any] = ["latitude":lat, "longitude":lng]
@@ -67,25 +66,29 @@ class ConnectionManager{
         request.httpBody = jsonData
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("Authorization", forHTTPHeaderField: key)
-        
+        request.addValue("Basic \(key)", forHTTPHeaderField: "Authorization")
+
         let task = session.dataTask(with: request) { (data, response, err) in
             if let error = err{
-                completion(nil, error)
+                completion(nil, nil,error)
             }else if let unwrappedData = data{
-                let str = String(decoding: unwrappedData, as: UTF8.self)
                 do{
-                    let response = try JSONDecoder().decode(Clocked.self, from: unwrappedData)
-                    completion(response,nil)
+                    let response = try JSONDecoder().decode(ClockedIn.self, from: unwrappedData)
+                    completion(response,nil,nil)
                 }catch{
-                    completion(nil,error)
+                    do{
+                        let response = try JSONDecoder().decode(ClockedError.self, from: unwrappedData)
+                        completion(nil,response,nil)
+                    }catch{
+                        completion(nil, nil,error)
+                    }
                 }
             }
         }
         task.resume()
     }
     
-    static func clockOut(lat:String, lng:String, completion: @escaping (Clocked?, Error?)-> Void){
+    static func clockOut(lat:String, lng:String, completion: @escaping (ClockedOut?, ClockedError?,Error?)-> Void){
         guard let key = Util.shared.getAuthKey() else { return }
         let session = URLSession(configuration: .default)
         let json:[String:Any] = ["latitude":lat, "longitude":lng]
@@ -95,18 +98,22 @@ class ConnectionManager{
         request.httpBody = jsonData
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("Authorization", forHTTPHeaderField: key)
+        request.addValue("Basic \(key)", forHTTPHeaderField: "Authorization")
         
         let task = session.dataTask(with: request) { (data, response, err) in
             if let error = err{
-                completion(nil, error)
+                completion(nil, nil,error)
             }else if let unwrappedData = data{
-                let str = String(decoding: unwrappedData, as: UTF8.self)
                 do{
-                    let response = try JSONDecoder().decode(Clocked.self, from: unwrappedData)
-                    completion(response,nil)
+                    let response = try JSONDecoder().decode(ClockedOut.self, from: unwrappedData)
+                    completion(response,nil,nil)
                 }catch{
-                    completion(nil,error)
+                    do{
+                        let response = try JSONDecoder().decode(ClockedError.self, from: unwrappedData)
+                        completion(nil,response,nil)
+                    }catch{
+                        completion(nil, nil,error)
+                    }
                 }
             }
         }

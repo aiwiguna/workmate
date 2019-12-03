@@ -28,8 +28,11 @@ class MainViewController: UIViewController {
         didSet{
             DispatchQueue.main.async {
                 if self.state == State.none{
+                    Util.shared.clearClockTime()
                     self.grayCircleView.isHidden = false
                     self.clockStateLabel.text = "Clock In"
+                    self.clockInLabel.text = "-"
+                    self.clockOutLabel.text = "-"
                 }else if self.state == State.clockedIn{
                     if let clockInTime = Util.shared.getClockInTime(){
                         self.clockInLabel.text = clockInTime.toTime()
@@ -56,10 +59,14 @@ class MainViewController: UIViewController {
     
     func auth(){
         ConnectionManager.auth(username: ConstantManager.username, password: ConstantManager.password) { (key, error) in
-            if let _ = error{
-                // do error handling if needed
+            if let errorValue = error{
+                DispatchQueue.main.async {
+                    self.showAlert(title: "Error", message: errorValue.localizedDescription)
+                }
             }else if let keyValue = key{
                 Util.shared.saveAuthKey(key: keyValue.key ?? "")
+                // set key with temporary value that work because key from response give "Invalid username/password." response
+                Util.shared.saveAuthKey(key: ConstantManager.temporaryKey)
                 self.getStaffRequest()
             }
         }
@@ -67,8 +74,10 @@ class MainViewController: UIViewController {
     
     func getStaffRequest(){
         ConnectionManager.getStaffRequest { (response, error) in
-            if let _ = error{
-                // do error handling if needed
+            if let errorValue = error{
+                DispatchQueue.main.async {
+                    self.showAlert(title: "Error", message: errorValue.localizedDescription)
+                }
             }else if let responseValue = response{
                 DispatchQueue.main.async {
                     self.titleLabel.text = responseValue.title ?? "-"
@@ -86,35 +95,46 @@ class MainViewController: UIViewController {
     }
     
     func clockIn(lat:String, lng:String){
-        ConnectionManager.clockIn(lat: lat, lng: lng) { (clocked, error) in
-//            if let _ = error{
-//
-//            }else if let response = clocked{
-//                if let time = response.timesheet?.clockInTime?.toDate(){
-//                    Util.shared.saveClockInTime(date: time)
-//                    self.state = .clockedIn
-//                }
-//            }
-            // temporary handle
-            Util.shared.saveClockInTime(date: Date())
-            self.state = .clockedIn
+        ConnectionManager.clockIn(lat: lat, lng: lng) { (clocked, clockedError,error) in
+            if let errorValue = error{
+                DispatchQueue.main.async {
+                    self.showAlert(title: "Error", message: errorValue.localizedDescription)
+                }
+            }else if let errorValue = clockedError{
+                DispatchQueue.main.async {
+                    if errorValue.code == "already_clocked_in"{
+                        self.state = .clockedIn
+                    }
+                    self.showAlert(title: "Error", message: errorValue.detail ?? "")
+                }
+            }else if let response = clocked{
+                if let time = response.clockInTime?.toDate(){
+                    Util.shared.saveClockInTime(date: time)
+                    self.state = .clockedIn
+                }
+            }
         }
     }
     
     func clockOut(lat:String, lng:String){
-        ConnectionManager.clockOut(lat: lat, lng: lng) { (clocked, error) in
-//            if let _ = error{
-//
-//            }else if let response = clocked{
-//                if let time = response.timesheet?.clockInTime?.toDate(){
-//                    Util.shared.saveClockOutTime(date: time)
-//                    self.state = .clockedOut
-//                }
-//            }
-            
-            // temporary handle
-            Util.shared.saveClockOutTime(date: Date())
-            self.state = .clockedOut
+        ConnectionManager.clockOut(lat: lat, lng: lng) { (clocked, clockedError, error) in
+            if let errorValue = error{
+                DispatchQueue.main.async {
+                    self.showAlert(title: "Error", message: errorValue.localizedDescription)
+                }
+            }else if let errorValue = clockedError{
+                DispatchQueue.main.async {
+                    if errorValue.code == "already_clocked_out"{
+                        self.state = .none
+                    }
+                    self.showAlert(title: "Error", message: errorValue.detail ?? "")
+                }
+            }else if let response = clocked{
+                if let time = response.timesheet.clockInTime?.toDate(){
+                    Util.shared.saveClockOutTime(date: time)
+                    self.state = .clockedOut
+                }
+            }
         }
     }
     
@@ -124,27 +144,13 @@ class MainViewController: UIViewController {
         
         contactNumberLabel.underlineText()
         
-        var lastDay:Date?
-        
         if let clockInTime = Util.shared.getClockInTime(){
             clockInLabel.text = clockInTime.toTime()
             state = .clockedIn
-            lastDay = clockInTime
         }
         
-        if let clockOutTime = Util.shared.getClockOutTime(){
-            clockOutLabel.text = clockOutTime.toTime()
-            state = .clockedOut
-            lastDay = clockOutTime
-        }
-        
-        if let day = lastDay{
-            if !Calendar.current.isDateInToday(day){
-                //reset state if it no today
-                clockInLabel.text = "-"
-                clockOutLabel.text = "-"
-                state = .none
-            }
+        if let _ = Util.shared.getClockOutTime(){
+            state = .none
         }
     }
     @IBAction func phoneTapped(_ sender: Any) {
@@ -181,6 +187,14 @@ class MainViewController: UIViewController {
         vc.state = state
         vc.modalPresentationStyle = .overCurrentContext
         vc.modalTransitionStyle = .crossDissolve
+        present(vc, animated: true, completion: nil)
+    }
+    
+    func showAlert(title:String,message:String){
+        let vc = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        vc.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
+            vc.dismiss(animated: true, completion: nil)
+        }))
         present(vc, animated: true, completion: nil)
     }
 }

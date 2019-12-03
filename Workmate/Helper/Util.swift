@@ -39,4 +39,9 @@ class Util{
     func getClockOutTime()->Date?{
         return UserDefaults.standard.object(forKey: "clockOutTime") as? Date
     }
+    
+    func clearClockTime(){
+        UserDefaults.standard.removeObject(forKey: "clockInTime")
+        UserDefaults.standard.removeObject(forKey: "clockOutTime")
+    }
 }

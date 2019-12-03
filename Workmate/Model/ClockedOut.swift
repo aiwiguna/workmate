@@ -8,10 +8,10 @@
 
 import Foundation
 
-// MARK: - Clocked
-struct Clocked: Codable {
-    let timesheet: Timesheet?
-    let requireFeedback: Bool?
+/// MARK: - ClockedOut
+struct ClockedOut: Codable {
+    let timesheet: Timesheet
+    let requireFeedback: Bool
 
     enum CodingKeys: String, CodingKey {
         case timesheet
