@@ -24,14 +24,6 @@ class Util{
         return UserDefaults.standard.string(forKey: "authKey")
     }
     
-    func saveClockInStatus(isLogin:Bool){
-        UserDefaults.standard.set(isLogin, forKey: "clockedIn")
-    }
-    
-    func getClockInStatus()->Bool{
-        return UserDefaults.standard.bool(forKey: "clockedIn")
-    }
-    
     func saveClockInTime(date:Date){
         UserDefaults.standard.set(date, forKey: "clockInTime")
     }
@@ -40,11 +32,11 @@ class Util{
         return UserDefaults.standard.object(forKey: "clockInTime") as? Date
     }
     
-    func saveLastWorkDay(date:Date){
-        UserDefaults.standard.set(date, forKey: "lastWorkDay")
+    func saveClockOutTime(date:Date){
+        UserDefaults.standard.set(date, forKey: "clockOutTime")
     }
     
-    func getLastWorkDay()->Date?{
-        return UserDefaults.standard.object(forKey: "lastWorkDay") as? Date
+    func getClockOutTime()->Date?{
+        return UserDefaults.standard.object(forKey: "clockOutTime") as? Date
     }
 }

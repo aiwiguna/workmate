@@ -26,14 +26,22 @@ class MainViewController: UIViewController {
     
     var state:State = State.none {
         didSet{
-            if state == State.none{
-                grayCircleView.isHidden = false
-                clockStateLabel.text = "Clock In"
-            }else if state == State.clockedIn{
-                grayCircleView.isHidden = false
-                clockStateLabel.text = "Clock Out"
-            }else if state == State.clockedOut{
-                grayCircleView.isHidden = true
+            DispatchQueue.main.async {
+                if self.state == State.none{
+                    self.grayCircleView.isHidden = false
+                    self.clockStateLabel.text = "Clock In"
+                }else if self.state == State.clockedIn{
+                    if let clockInTime = Util.shared.getClockInTime(){
+                        self.clockInLabel.text = clockInTime.toTime()
+                    }
+                    self.grayCircleView.isHidden = false
+                    self.clockStateLabel.text = "Clock Out"
+                }else if self.state == State.clockedOut{
+                    if let clockOutTime = Util.shared.getClockOutTime(){
+                        self.clockOutLabel.text = clockOutTime.toTime()
+                    }
+                    self.grayCircleView.isHidden = true
+                }
             }
         }
     }
@@ -77,15 +85,71 @@ class MainViewController: UIViewController {
         }
     }
     
+    func clockIn(lat:String, lng:String){
+        ConnectionManager.clockIn(lat: lat, lng: lng) { (clocked, error) in
+//            if let _ = error{
+//
+//            }else if let response = clocked{
+//                if let time = response.timesheet?.clockInTime?.toDate(){
+//                    Util.shared.saveClockInTime(date: time)
+//                    self.state = .clockedIn
+//                }
+//            }
+            // temporary handle
+            Util.shared.saveClockInTime(date: Date())
+            self.state = .clockedIn
+        }
+    }
+    
+    func clockOut(lat:String, lng:String){
+        ConnectionManager.clockOut(lat: lat, lng: lng) { (clocked, error) in
+//            if let _ = error{
+//
+//            }else if let response = clocked{
+//                if let time = response.timesheet?.clockInTime?.toDate(){
+//                    Util.shared.saveClockOutTime(date: time)
+//                    self.state = .clockedOut
+//                }
+//            }
+            
+            // temporary handle
+            Util.shared.saveClockOutTime(date: Date())
+            self.state = .clockedOut
+        }
+    }
+    
     func setUI(){
         whiteCircleView.circleView()
         grayCircleView.circleView()
         
+        contactNumberLabel.underlineText()
+        
+        var lastDay:Date?
+        
         if let clockInTime = Util.shared.getClockInTime(){
             clockInLabel.text = clockInTime.toTime()
             state = .clockedIn
-        }else{
-            state = .none
+            lastDay = clockInTime
+        }
+        
+        if let clockOutTime = Util.shared.getClockOutTime(){
+            clockOutLabel.text = clockOutTime.toTime()
+            state = .clockedOut
+            lastDay = clockOutTime
+        }
+        
+        if let day = lastDay{
+            if !Calendar.current.isDateInToday(day){
+                //reset state if it no today
+                clockInLabel.text = "-"
+                clockOutLabel.text = "-"
+                state = .none
+            }
+        }
+    }
+    @IBAction func phoneTapped(_ sender: Any) {
+        if let url = URL(string: "tel://\(contactNumberLabel.text ?? "")") {
+          UIApplication.shared.open(url)
         }
     }
     
@@ -106,6 +170,8 @@ class MainViewController: UIViewController {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.distanceFilter = 10
         locationManager.startUpdatingLocation()
+        
+        // open overlay if can access location
         openOverlay()
     }
     
@@ -120,9 +186,13 @@ class MainViewController: UIViewController {
 }
 
 extension MainViewController: OverlayDelegate{
-    func didSuccess() {
+    func didSuccess(state:State) {
         guard let coordinate = locationManager.location?.coordinate else {return}
-        print(coordinate)
+        if state == .none{
+            clockIn(lat: "\(coordinate.latitude)", lng: "\(coordinate.longitude)")
+        }else if state == .clockedIn{
+            clockOut(lat: "\(coordinate.latitude)", lng: "\(coordinate.longitude)")
+        }
     }
     
     func didCancel() {

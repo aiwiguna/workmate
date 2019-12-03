@@ -9,7 +9,7 @@
 import UIKit
 
 protocol OverlayDelegate {
-    func didSuccess()
+    func didSuccess(state:State)
     func didCancel()
 }
 
@@ -41,7 +41,7 @@ class OverlayViewController: UIViewController {
                     }else{
                         timer.invalidate()
                         self.dismiss(animated: true) {
-                            self.delegate?.didSuccess()
+                            self.delegate?.didSuccess(state: self.state ?? State.none)
                         }
                     }
                 }

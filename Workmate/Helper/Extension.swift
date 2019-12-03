@@ -18,12 +18,24 @@ extension UIView{
 extension UIButton{
     func underlineText(){
         let attr: [NSAttributedString.Key: Any] = [
-            .font: UIFont.systemFont(ofSize: 15, weight: .bold),
-        .foregroundColor: UIColor.white,
+            .font: self.titleLabel!.font!,
+            .foregroundColor: self.titleLabel!.textColor!,
         .underlineStyle: NSUnderlineStyle.single.rawValue]
         
         let buttonTitleStr = NSMutableAttributedString(string:self.currentTitle ?? "", attributes:attr)
         self.setAttributedTitle(buttonTitleStr, for: .normal)
+    }
+}
+
+extension UILabel{
+    func underlineText(){
+        let attr: [NSAttributedString.Key: Any] = [
+            .font: self.font!,
+            .foregroundColor: self.textColor!,
+        .underlineStyle: NSUnderlineStyle.single.rawValue]
+        
+        let title = NSMutableAttributedString(string:self.text ?? "", attributes:attr)
+        self.attributedText = title
     }
 }
 
@@ -42,6 +54,12 @@ extension String{
         currencyFormatter.numberStyle = .currency
         currencyFormatter.locale = Locale(identifier: "id_ID")
         return currencyFormatter.string(from: NSNumber(value: Double(self) ?? 0)) ?? "-"
+    }
+    
+    func toDate()->Date?{
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        return dateFormatter.date(from: self)
     }
     
     func removeUnderScore()->String{

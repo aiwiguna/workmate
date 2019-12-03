@@ -92,11 +92,15 @@
                     <color key="textColor" red="0.46666666670000001" green="0.46666666670000001" blue="0.46666666670000001" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="-" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SwY-PM-Ed8">
+                <label opaque="NO" contentMode="left" verticalHuggingPriority="251" text="-" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SwY-PM-Ed8">
                     <rect key="frame" x="216" y="219.5" width="170" height="16"/>
+                    <gestureRecognizers/>
                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                     <color key="textColor" red="0.46666666670000001" green="0.46666666670000001" blue="0.46666666670000001" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
+                    <connections>
+                        <outletCollection property="gestureRecognizers" destination="m2F-gP-TYt" appends="YES" id="2Jr-w6-JXi"/>
+                    </connections>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Clock in" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DGt-3e-jfE">
                     <rect key="frame" x="28" y="259.5" width="170" height="16"/>
@@ -217,6 +221,11 @@
         <tapGestureRecognizer id="skB-6d-Plb">
             <connections>
                 <action selector="buttonTapped:" destination="-1" id="qtS-5K-FTP"/>
+            </connections>
+        </tapGestureRecognizer>
+        <tapGestureRecognizer id="m2F-gP-TYt">
+            <connections>
+                <action selector="phoneTapped:" destination="-1" id="7xa-cV-8Om"/>
             </connections>
         </tapGestureRecognizer>
     </objects>
