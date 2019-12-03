@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 class MainViewController: UIViewController {
     
@@ -36,6 +37,8 @@ class MainViewController: UIViewController {
             }
         }
     }
+    
+    let locationManager = CLLocationManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -87,6 +90,26 @@ class MainViewController: UIViewController {
     }
     
     @IBAction func buttonTapped(_ sender: Any) {
+        setupLocation()
+    }
+    
+    func setupLocation(){
+        locationManager.delegate = self
+        let status =  CLLocationManager.authorizationStatus()
+        if status != .authorizedAlways && status != .authorizedWhenInUse{
+            locationManager.requestWhenInUseAuthorization()
+            return
+        }
+        if !CLLocationManager.locationServicesEnabled(){
+            return
+        }
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.distanceFilter = 10
+        locationManager.startUpdatingLocation()
+        openOverlay()
+    }
+    
+    func openOverlay(){
         let vc = OverlayViewController()
         vc.delegate = self
         vc.state = state
@@ -98,10 +121,19 @@ class MainViewController: UIViewController {
 
 extension MainViewController: OverlayDelegate{
     func didSuccess() {
-        
+        guard let coordinate = locationManager.location?.coordinate else {return}
+        print(coordinate)
     }
     
     func didCancel() {
         // do something if needed
+    }
+}
+
+extension MainViewController : CLLocationManagerDelegate{
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if status == .authorizedAlways || status == .authorizedWhenInUse{
+            setupLocation()
+        }
     }
 }

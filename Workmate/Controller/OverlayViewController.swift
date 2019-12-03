@@ -39,6 +39,7 @@ class OverlayViewController: UIViewController {
                     self.progressValue += 0.001
                     self.currentProgressView.frame.size = CGSize(width: self.progressView.frame.width * self.progressValue, height: self.progressView.frame.height)
                     }else{
+                        timer.invalidate()
                         self.dismiss(animated: true) {
                             self.delegate?.didSuccess()
                         }
