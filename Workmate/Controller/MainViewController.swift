@@ -66,7 +66,7 @@ class MainViewController: UIViewController {
             }else if let keyValue = key{
                 Util.shared.saveAuthKey(key: keyValue.key ?? "")
                 // set key with temporary value that work because key from response give "Invalid username/password." response
-                Util.shared.saveAuthKey(key: ConstantManager.temporaryKey)
+//                Util.shared.saveAuthKey(key: ConstantManager.temporaryKey)
                 self.getStaffRequest()
             }
         }

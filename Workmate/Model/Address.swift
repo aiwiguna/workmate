@@ -12,8 +12,8 @@ import Foundation
 struct Address: Codable {
     let id: Int?
     let country: Country?
-    let street1, street2, zip, latitude: String?
-    let longitude: String?
+    let street1, street2, zip: String?
+    let latitude,longitude: Double?
     let area: Area?
 
     enum CodingKeys: String, CodingKey {
